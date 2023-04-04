@@ -1,0 +1,52 @@
+<% if flash[:notice] %>
+  <p class="notice"><%= flash[:notice] %></p>
+<% end %>
+<h2>予定一覧</h2>
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>タイトル</th>
+      <th>開始日</th>
+      <th>終了日</th>
+      <th>終日</th>
+      <th>更新日</th>
+      <th>参照</th>
+      <th>編集</th>
+      <th>削除</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.title %></td>
+        <% if user.start_date %>
+          <td><%= user.start_date.to_formatted_s(:custom_format) %></td>
+        <% else %>
+          <td></td>
+        <% end %>
+        <% if user.end_date %>
+          <td><%= user.end_date.to_formatted_s(:custom_format) %></td>
+        <% else %>
+          <td></td>
+        <% end %>
+        <td class="all-day <%= user.all_day ? 'active' : '' %>">
+          <% if user.all_day %>
+            <%= "○" %>
+          <% end %>
+        </td>
+        <td><%= user.updated_at.to_formatted_s(:datetime_jp) %></td>
+        <td><%= link_to "参照", user %></td>
+        <td><%= link_to "編集", [:edit, user] %></td>
+        <td><%= link_to "削除", user, data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to "ユーザー新規登録", :new_user %></p>
+<div class = "sum" ><%= "合計予定数：#{@users.count}件" %></div>
+<div class = "today-date" ><%= "本日の日付：#{Date.today.strftime("%Y/%m/%d")}" %></div>
+   
+
